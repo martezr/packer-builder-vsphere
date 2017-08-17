@@ -7,7 +7,7 @@ import (
 	"fmt"
 )
 
-type CloneConfig struct {
+type CreateConfig struct {
 	VMName         string `mapstructure:"vm_name"`
 	Folder         string `mapstructure:"folder"`
   GuestOS        string `mapstructure:"guest_os_type"`

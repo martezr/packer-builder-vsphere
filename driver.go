@@ -95,29 +95,15 @@ func (d *Driver) CreateVM(config *CreateConfig) (*object.VirtualMachine, error) 
 		relocateSpec.Datastore = &datastoreRef
 	}
 
-	var cloneSpec types.VirtualMachineCloneSpec
-	cloneSpec.Location = relocateSpec
-	cloneSpec.PowerOn = false
-
-	if config.LinkedClone == true {
-		cloneSpec.Location.DiskMoveType = "createNewChildDiskBacking"
-
-		var tpl mo.VirtualMachine
-		err = template.Properties(d.ctx, template.Reference(), []string{"snapshot"}, &tpl)
-		if err != nil {
-			return nil, err
-		}
-		if tpl.Snapshot == nil {
-			err = errors.New("`linked_clone=true`, but template has no snapshots")
-			return nil, err
-		}
-		cloneSpec.Snapshot = tpl.Snapshot.CurrentSnapshot
-	}
 
 	task, err := template.Clone(d.ctx, folder, config.VMName, cloneSpec)
 	if err != nil {
 		return nil, err
 	}
+
+
+
+
 
 	info, err := task.WaitForResult(d.ctx, nil)
 	if err != nil {
