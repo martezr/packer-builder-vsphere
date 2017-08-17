@@ -11,7 +11,7 @@ import (
 type Config struct {
 	common.PackerConfig 	`mapstructure:",squash"`
 	ConnectConfig 			`mapstructure:",squash"`
-	CloneConfig 			`mapstructure:",squash"`
+	CreateConfig 			`mapstructure:",squash"`
 	HardwareConfig 			`mapstructure:",squash"`
 	communicator.Config 	`mapstructure:",squash"`
 	ShutdownConfig         	`mapstructure:",squash"`

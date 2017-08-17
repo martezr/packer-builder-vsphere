@@ -66,11 +66,11 @@ func NewDriver(config *ConnectConfig) (*Driver, error) {
 	return &d, nil
 }
 
-func (d *Driver) CloneVM(config *CloneConfig) (*object.VirtualMachine, error) {
-	template, err := d.finder.VirtualMachine(d.ctx, config.Template)
-	if err != nil {
-		return nil, err
-	}
+func (d *Driver) CreateVM(config *CreateConfig) (*object.VirtualMachine, error) {
+//	template, err := d.finder.VirtualMachine(d.ctx, config.Template)
+//	if err != nil {
+//		return nil, err
+//	}
 
 	folder, err := d.finder.FolderOrDefault(d.ctx, fmt.Sprintf("/%v/vm/%v", d.datacenter.Name(), config.Folder))
 	if err != nil {
