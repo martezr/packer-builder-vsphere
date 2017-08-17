@@ -67,10 +67,6 @@ func NewDriver(config *ConnectConfig) (*Driver, error) {
 }
 
 func (d *Driver) CreateVM(config *CreateConfig) (*object.VirtualMachine, error) {
-//	template, err := d.finder.VirtualMachine(d.ctx, config.Template)
-//	if err != nil {
-//		return nil, err
-//	}
 
 	folder, err := d.finder.FolderOrDefault(d.ctx, fmt.Sprintf("/%v/vm/%v", d.datacenter.Name(), config.Folder))
 	if err != nil {
@@ -94,16 +90,6 @@ func (d *Driver) CreateVM(config *CreateConfig) (*object.VirtualMachine, error) 
 		datastoreRef := datastore.Reference()
 		relocateSpec.Datastore = &datastoreRef
 	}
-
-
-	task, err := template.Clone(d.ctx, folder, config.VMName, cloneSpec)
-	if err != nil {
-		return nil, err
-	}
-
-
-
-
 
 	info, err := task.WaitForResult(d.ctx, nil)
 	if err != nil {
