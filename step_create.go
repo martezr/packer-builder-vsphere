@@ -14,15 +14,12 @@ type CreateConfig struct {
 	CPU            int32  `mapstructure:"cpu"`
 	RAM            int64  `mapstructure:"ram"`
 
-
-  Network        string `mapstructure:"network"`
-  NetworkAdapter string `mapstructure:"network_adapter"`
-
-  disk           string `mapstructure:"disk_size"`
-	iso            string `mapstructure:"iso"`
-	isoDatastore   string `mapstructure:"iso_datastore"`
+  Disk           string `mapstructure:"disk_size"`
+	IsoFile        string `mapstructure:"iso"`
+	IsoDatastore   string `mapstructure:"iso_datastore"`
 	Host           string `mapstructure:"host"`
 	ResourcePool   string `mapstructure:"resource_pool"`
+  Cluster        string `mapstructure:"cluster"`
 	Datastore      string `mapstructure:"datastore"`
 }
 

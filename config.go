@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/hashicorp/packer/common"
-	"github.com/hashicorp/packer/helper/communicator"
 	"github.com/hashicorp/packer/helper/config"
 	"github.com/hashicorp/packer/packer"
 	"github.com/hashicorp/packer/template/interpolate"
@@ -13,7 +12,7 @@ type Config struct {
 	ConnectConfig 			`mapstructure:",squash"`
 	CreateConfig 			`mapstructure:",squash"`
 	HardwareConfig 			`mapstructure:",squash"`
-	communicator.Config 	`mapstructure:",squash"`
+//	communicator.Config 	`mapstructure:",squash"`
 	ShutdownConfig         	`mapstructure:",squash"`
 	CreateSnapshot    bool 	`mapstructure:"create_snapshot"`
 	ConvertToTemplate bool 	`mapstructure:"convert_to_template"`
@@ -34,7 +33,7 @@ func NewConfig(raws ...interface{}) (*Config, []string, error) {
 	}
 
 	errs := new(packer.MultiError)
-	errs = packer.MultiErrorAppend(errs, c.Config.Prepare(&c.ctx)...)
+//	errs = packer.MultiErrorAppend(errs, c.Config.Prepare(&c.ctx)...)
 	errs = packer.MultiErrorAppend(errs, c.ConnectConfig.Prepare()...)
 	errs = packer.MultiErrorAppend(errs, c.CreateConfig.Prepare()...)
 	errs = packer.MultiErrorAppend(errs, c.HardwareConfig.Prepare()...)

@@ -7,8 +7,6 @@ import (
 	"github.com/hashicorp/packer/packer"
 	"github.com/mitchellh/multistep"
 	"github.com/hashicorp/packer/helper/communicator"
-	gossh "golang.org/x/crypto/ssh"
-	"github.com/hashicorp/packer/communicator/ssh"
 	"github.com/vmware/govmomi/object"
 )
 
@@ -43,24 +41,7 @@ func (b *Builder) Run(ui packer.Ui, hook packer.Hook, cache packer.Cache) (packe
 			config: &b.config.HardwareConfig,
 		},
 		&StepRun{},
-		&communicator.StepConnect{
-			Config:    &b.config.Config,
-			Host:      func(state multistep.StateBag) (string, error) {
-				return state.Get("ip").(string), nil
-			},
-			SSHConfig: func(multistep.StateBag) (*gossh.ClientConfig, error) {
-				return &gossh.ClientConfig{
-					User: b.config.Config.SSHUsername,
-					Auth: []gossh.AuthMethod{
-						gossh.Password(b.config.Config.SSHPassword),
-						gossh.KeyboardInteractive(
-							ssh.PasswordKeyboardInteractive(b.config.Config.SSHPassword)),
-					},
-					// TODO: add a proper verification
-					HostKeyCallback: gossh.InsecureIgnoreHostKey(),
-				}, nil
-			},
-		},
+		&communicator.StepConnect{},
 		&common.StepProvision{},
 		&StepShutdown{
 			config: &b.config.ShutdownConfig,
