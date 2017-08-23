@@ -21,6 +21,10 @@ type CreateConfig struct {
 	ResourcePool   string `mapstructure:"resource_pool"`
   Cluster        string `mapstructure:"cluster"`
 	Datastore      string `mapstructure:"datastore"`
+
+  Network           string `mapstructure:"network"`
+  NetworkAdapter    string `mapstructure:"network_adapter"`
+  NetworkMacAddress string `mapstructure:"network_mac_address"`
 }
 
 func (c *CreateConfig) Prepare() []error {

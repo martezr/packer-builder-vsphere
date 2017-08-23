@@ -14,10 +14,6 @@ type HardwareConfig struct {
 	RAM            int64 `mapstructure:"RAM"`
 	RAMReservation int64 `mapstructure:"RAM_reservation"`
 	RAMReserveAll  bool  `mapstructure:"RAM_reserve_all"`
-
-  Network           string `mapstructure:"network"`
-  NetworkAdapter    string `mapstructure:"network_adapter"`
-  NetworkMacAddress string `mapstructure:"network_mac_address"`
 }
 
 func (c *HardwareConfig) Prepare() []error {

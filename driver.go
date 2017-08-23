@@ -6,8 +6,8 @@ import (
 	"context"
 	"net/url"
 	"fmt"
-	"regexp"
 	"strconv"
+	"regexp"
 	"github.com/vmware/govmomi/object"
 	"github.com/vmware/govmomi/vim25/types"
 	"errors"
@@ -81,12 +81,11 @@ func (d *Driver) CreateVM(config *CreateConfig) (*object.VirtualMachine, error) 
 	}
 
 
+  // Storage configuration
   var bytesRegexp = regexp.MustCompile(`^(?i)(\d+)([BKMGTPE]?)(ib|b)?$`)
   m := bytesRegexp.FindStringSubmatch(config.Disk)
-	i, err := strconv.ParseInt(m[1], 10, 64)
-	diskByteSize := int64(b)
-
-//  diskByteSize = 20000000
+	i, _ := strconv.ParseInt(m[1], 10, 64)
+	diskByteSize := i * 1024 * 1024 * 1024
 
   data := config.IsoDatastore
 	datafile := config.IsoFile
@@ -96,7 +95,10 @@ func (d *Driver) CreateVM(config *CreateConfig) (*object.VirtualMachine, error) 
 		return nil, err
 	}
 
-	devices, err = d.addNetwork(devices)
+  // Network configuration
+	networkname := config.Network
+	netadaptertype := config.NetworkAdapter
+	devices, err = d.addNetwork(devices, networkname, netadaptertype)
 	if err != nil {
 		return nil, err
 	}
@@ -254,34 +256,31 @@ func (d *Driver) ConvertToTemplate(vm *object.VirtualMachine) error {
 	return err
 }
 
-func (d *Driver) Device() (types.BaseVirtualDevice, error) {
+func (d *Driver) Device(networkname string, netadaptertype string) (types.BaseVirtualDevice, error) {
 
-	network, err := d.finder.Network(d.ctx, "VM Network")
-//	if err != nil {
-//		return err
-//	}
+	network, err := d.finder.Network(d.ctx, networkname)
 
 	backing, err := network.EthernetCardBackingInfo(context.TODO())
 	if err != nil {
 		return nil, err
 	}
 
-	device, err := object.EthernetCardTypes().CreateEthernetCard("e1000", backing)
+	device, err := object.EthernetCardTypes().CreateEthernetCard(netadaptertype, backing)
 	if err != nil {
 		return nil, err
 	}
 
-//	if config.NetworkMacAddress != "" {
-//		card := device.(types.BaseVirtualEthernetCard).GetVirtualEthernetCard()
-//		card.AddressType = string(types.VirtualEthernetCardMacTypeManual)
-//		card.MacAddress = config.NetworkMacAddress
-//	}
-
+/*	if config.NetworkMacAddress != "" {
+		card := device.(types.BaseVirtualEthernetCard).GetVirtualEthernetCard()
+		card.AddressType = string(types.VirtualEthernetCardMacTypeManual)
+		card.MacAddress = config.NetworkMacAddress
+	}
+*/
 	return device, nil
 }
 
-func (d *Driver) addNetwork(devices object.VirtualDeviceList) (object.VirtualDeviceList, error) {
-	netdev, err := d.Device()
+func (d *Driver) addNetwork(devices object.VirtualDeviceList, networkname string, netadaptertype string) (object.VirtualDeviceList, error) {
+	netdev, err := d.Device(networkname, netadaptertype)
 	if err != nil {
 		return nil, err
 	}

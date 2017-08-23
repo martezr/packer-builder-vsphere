@@ -4,7 +4,7 @@ This a plugin for [HashiCorp Packer](https://www.packer.io/). It uses native vSp
 
 - VMware Player is not required
 - Builds are incremental, VMs are not created from scratch but cloned from base templates - similar to [amazon-ebs](https://www.packer.io/docs/builders/amazon-ebs.html) builder
-- Official vCenter API is used, no ESXi host [modification](https://www.packer.io/docs/builders/vmware-iso.html#building-on-a-remote-vsphere-hypervisor) is required 
+- Official vCenter API is used, no ESXi host [modification](https://www.packer.io/docs/builders/vmware-iso.html#building-on-a-remote-vsphere-hypervisor) is required
 
 ## Usage
 * Download the plugin from [Releases](https://github.com/jetbrains-infra/packer-builder-vsphere/releases) page
@@ -21,19 +21,21 @@ This a plugin for [HashiCorp Packer](https://www.packer.io/). It uses native vSp
       "vcenter_server": "vcenter.domain.com",
       "username": "root",
       "password": "secret",
+      "cluster": "cluster01",
+      "host": "esxi-1.domain.com",
 
-      "template": "ubuntu",
       "vm_name":  "vm-1",
-      "host":     "esxi-1.domain.com",
+      "folder": "templates",
+      "cpu": "1",
+      "ram": "2048",
+      "network": "VM Network",
+      "network_adapter": "e1000",
+      "guest_os_type": "otherGuest",
+      "datastore": "Local_Storage",
+      "disk_size": "5GB",
+      "iso": "ISOS/WIN2K12.ISO",
+      "iso_datastore": "Local_Storage",
 
-      "ssh_username": "root",
-      "ssh_password": "secret"
-    }
-  ],
-  "provisioners": [
-    {
-      "type": "shell",
-      "inline": [ "echo hello" ]
     }
   ]
 }
@@ -49,7 +51,6 @@ Connection:
 * `datacenter` - required if there are several datacenters.
 
 Location:
-* `template` - [**mandatory**] name of source VM. Path is optional.
 * `vm_name` - [**mandatory**] name of target VM.
 * `folder` - VM folder where target VM is created.
 * `host` - [**mandatory**] vSphere host or cluster where target VM is created. If hosts are groupped into folders, full path should be specified: `folder/host`.
@@ -65,69 +66,8 @@ Hardware customization:
 * `RAM_reservation` - Amount of reserved RAM in MB. Inherited from source VM by default.
 * `RAM_reserve_all` - Reserve all available RAM (bool). `false` by default. Cannot be used together with `RAM_reservation`.
 
-Provisioning:
-* `ssh_username` - [**mandatory**] username in guest OS.
-* `ssh_password` - [**mandatory**] password in guest OS.
-
 Post-processing:
 * `shutdown_command` - VMware guest tools are used by default.
 * `shutdown_timeout` - [Duration](https://golang.org/pkg/time/#ParseDuration) how long to wait for a graceful shutdown. 5 minutes by default.
 * `create_snapshot` - add a snapshot, so VM can be used as a base for linked clones. `false` by default.
 * `convert_to_template` - convert VM to a template. `false` by default.
-
-## Complete Example
-```json
-{
-  "variables": {
-    "vsphere_password": "secret",
-    "guest_password": "secret"
-  },
-
-  "builders": [
-    {
-      "type": "vsphere",
-
-      "vcenter_server": "vcenter.domain.com",
-      "username": "root",
-      "password": "{{user `vsphere_password`}}",
-      "insecure_connection": true,
-      "datacenter": "dc1",
-
-      "template": "folder/ubuntu",
-      "vm_name": "vm-1",
-      "folder": "folder1/folder2",
-      "host": "folder/esxi-1.domain.com",
-      "resource_pool": "pool1/pool2",
-      "datastore": "datastore1",
-      "linked_clone": true,
-
-      "CPUs": 2,
-      "CPU_reservation": 1000,
-      "CPU_limit": 2000,
-      "RAM": 8192,
-      "RAM_reservation": 2048,
-
-      "ssh_username": "root",
-      "ssh_password": "{{user `guest_password`}}",
-
-      "shutdown_command": "echo '{{user `guest_password`}}' | sudo -S shutdown -P now",
-      "shutdown_timeout": "5m",
-      "create_snapshot": true,
-      "convert_to_template": true
-    }
-  ],
-
-  "provisioners": [
-    {
-      "type": "shell",
-      "environment_vars": [
-        "DEBIAN_FRONTEND=noninteractive"
-      ],
-      "execute_command": "echo '{{user `guest_password`}}' | {{.Vars}} sudo -ES bash -eux '{{.Path}}'",
-      "inline": [
-        "apt-get install -y zip"
-      ]
-    }
-  ]
-}
-```
