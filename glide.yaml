@@ -1,4 +1,4 @@
-package: github.com/jetbrains-infra/packer-builder-vsphere
+package: github.com/martezr/packer-builder-vsphere-iso
 import:
 - package: github.com/hashicorp/packer
   version: v1.0.2

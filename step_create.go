@@ -8,19 +8,19 @@ import (
 )
 
 type CreateConfig struct {
-	VMName         string `mapstructure:"vm_name"`
-	Folder         string `mapstructure:"folder"`
-  GuestOS        string `mapstructure:"guest_os_type"`
-	CPU            int32  `mapstructure:"cpu"`
-	RAM            int64  `mapstructure:"ram"`
+	VMName         		string `mapstructure:"vm_name"`
+	Folder         		string `mapstructure:"folder"`
+  GuestOS        		string `mapstructure:"guest_os_type"`
+	CPU            		int32  `mapstructure:"cpu"`
+	RAM            		int64  `mapstructure:"ram"`
 
-  Disk           string `mapstructure:"disk_size"`
-	IsoFile        string `mapstructure:"iso"`
-	IsoDatastore   string `mapstructure:"iso_datastore"`
-	Host           string `mapstructure:"host"`
-	ResourcePool   string `mapstructure:"resource_pool"`
-  Cluster        string `mapstructure:"cluster"`
-	Datastore      string `mapstructure:"datastore"`
+  Disk           		string `mapstructure:"disk_size"`
+	IsoFile        		string `mapstructure:"iso"`
+	IsoDatastore   		string `mapstructure:"iso_datastore"`
+	Host           		string `mapstructure:"host"`
+	ResourcePool   		string `mapstructure:"resource_pool"`
+  Cluster        		string `mapstructure:"cluster"`
+	Datastore      		string `mapstructure:"datastore"`
 
   Network           string `mapstructure:"network"`
   NetworkAdapter    string `mapstructure:"network_adapter"`

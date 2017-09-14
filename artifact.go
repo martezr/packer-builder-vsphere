@@ -5,7 +5,7 @@ import (
 	"context"
 )
 
-const BuilderId = "jetbrains.vsphere"
+const BuilderId = "martezr.vsphere-iso"
 
 type Artifact struct {
 	Name string

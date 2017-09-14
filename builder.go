@@ -2,11 +2,9 @@ package main
 
 import (
 	"errors"
-
 	"github.com/hashicorp/packer/common"
 	"github.com/hashicorp/packer/packer"
 	"github.com/mitchellh/multistep"
-	"github.com/hashicorp/packer/helper/communicator"
 	"github.com/vmware/govmomi/object"
 )
 
@@ -41,11 +39,8 @@ func (b *Builder) Run(ui packer.Ui, hook packer.Hook, cache packer.Cache) (packe
 			config: &b.config.HardwareConfig,
 		},
 		&StepRun{},
-		&communicator.StepConnect{},
 		&common.StepProvision{},
-		&StepShutdown{
-			config: &b.config.ShutdownConfig,
-		},
+		&StepShutdown{},
 		&StepCreateSnapshot{
 			createSnapshot: b.config.CreateSnapshot,
 		},
