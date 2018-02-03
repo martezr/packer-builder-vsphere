@@ -1,27 +1,27 @@
 package main
 
 import (
+	"context"
+	"errors"
+	"fmt"
 	"github.com/vmware/govmomi"
 	"github.com/vmware/govmomi/find"
-	"context"
-	"net/url"
-	"fmt"
-	"strconv"
-	"regexp"
 	"github.com/vmware/govmomi/object"
-	"github.com/vmware/govmomi/vim25/types"
-	"errors"
-	"time"
 	"github.com/vmware/govmomi/session"
-	"github.com/vmware/govmomi/vim25/soap"
 	"github.com/vmware/govmomi/vim25"
+	"github.com/vmware/govmomi/vim25/soap"
+	"github.com/vmware/govmomi/vim25/types"
+	"net/url"
+	"regexp"
+	"strconv"
+	"time"
 )
 
 type Driver struct {
-	ctx        context.Context
-	client     *govmomi.Client
-	finder     *find.Finder
-	datacenter *object.Datacenter
+	ctx          context.Context
+	client       *govmomi.Client
+	finder       *find.Finder
+	datacenter   *object.Datacenter
 	ResourcePool *object.ResourcePool
 }
 
@@ -79,16 +79,16 @@ func (d *Driver) CreateVM(config *CreateConfig) (*object.VirtualMachine, error) 
 		NumCPUs:    int32(config.CPU),
 		MemoryMB:   int64(config.RAM),
 		Annotation: config.Annotation,
-		Version:		config.HardwareVersion,
+		Version:    config.HardwareVersion,
 	}
 
-  // Storage configuration
-  var bytesRegexp = regexp.MustCompile(`^(?i)(\d+)([BKMGTPE]?)(ib|b)?$`)
-  m := bytesRegexp.FindStringSubmatch(config.Disk)
+	// Storage configuration
+	var bytesRegexp = regexp.MustCompile(`^(?i)(\d+)([BKMGTPE]?)(ib|b)?$`)
+	m := bytesRegexp.FindStringSubmatch(config.Disk)
 	i, _ := strconv.ParseInt(m[1], 10, 64)
 	diskByteSize := i * 1024 * 1024 * 1024
 
-  data := config.IsoDatastore
+	data := config.IsoDatastore
 	datafile := config.IsoFile
 
 	devices, err = d.addStorage(nil, data, datafile, diskByteSize)
@@ -96,7 +96,7 @@ func (d *Driver) CreateVM(config *CreateConfig) (*object.VirtualMachine, error) 
 		return nil, err
 	}
 
-  // Network configuration
+	// Network configuration
 	networkname := config.Network
 	netadaptertype := config.NetworkAdapter
 	devices, err = d.addNetwork(devices, networkname, netadaptertype)
@@ -109,7 +109,7 @@ func (d *Driver) CreateVM(config *CreateConfig) (*object.VirtualMachine, error) 
 		return nil, err
 	}
 
-  spec.DeviceChange = deviceChange
+	spec.DeviceChange = deviceChange
 
 	folder, err := d.finder.FolderOrDefault(d.ctx, fmt.Sprintf("/%v/vm/%v", d.datacenter.Name(), config.Folder))
 	if err != nil {
@@ -125,7 +125,7 @@ func (d *Driver) CreateVM(config *CreateConfig) (*object.VirtualMachine, error) 
 	poolRef := pool.Reference()
 	relocateSpec.Pool = &poolRef
 
-  datastore, err := d.finder.Datastore(d.ctx, config.Datastore)
+	datastore, err := d.finder.Datastore(d.ctx, config.Datastore)
 	datastoreRef := datastore.Reference()
 	relocateSpec.Datastore = &datastoreRef
 
@@ -270,12 +270,12 @@ func (d *Driver) Device(networkname string, netadaptertype string) (types.BaseVi
 		return nil, err
 	}
 
-/*	if config.NetworkMacAddress != "" {
-		card := device.(types.BaseVirtualEthernetCard).GetVirtualEthernetCard()
-		card.AddressType = string(types.VirtualEthernetCardMacTypeManual)
-		card.MacAddress = config.NetworkMacAddress
-	}
-*/
+	/*	if config.NetworkMacAddress != "" {
+			card := device.(types.BaseVirtualEthernetCard).GetVirtualEthernetCard()
+			card.AddressType = string(types.VirtualEthernetCardMacTypeManual)
+			card.MacAddress = config.NetworkMacAddress
+		}
+	*/
 	return device, nil
 }
 
@@ -291,7 +291,7 @@ func (d *Driver) addNetwork(devices object.VirtualDeviceList, networkname string
 
 func (d *Driver) addStorage(devices object.VirtualDeviceList, isopath string, isofile string, diskbytesize int64) (object.VirtualDeviceList, error) {
 
-  // Create SCSI Controller for Hard Disk
+	// Create SCSI Controller for Hard Disk
 	scsi, err := devices.CreateSCSIController("scsi")
 	if err != nil {
 		return nil, err
@@ -299,8 +299,7 @@ func (d *Driver) addStorage(devices object.VirtualDeviceList, isopath string, is
 
 	devices = append(devices, scsi)
 
-
-  // Create IDE Controller for CD-ROM
+	// Create IDE Controller for CD-ROM
 	idecontroller, err := devices.CreateIDEController()
 	if err != nil {
 		return nil, err
@@ -308,7 +307,7 @@ func (d *Driver) addStorage(devices object.VirtualDeviceList, isopath string, is
 
 	devices = append(devices, idecontroller)
 
-  // Add a CD-ROM to the IDE Controller
+	// Add a CD-ROM to the IDE Controller
 
 	// Find the IDE controller
 	ide, err := devices.FindIDEController("")
@@ -316,25 +315,24 @@ func (d *Driver) addStorage(devices object.VirtualDeviceList, isopath string, is
 		return nil, err
 	}
 
-  // Create the CD-ROM Drive
+	// Create the CD-ROM Drive
 	cdrom, err := devices.CreateCdrom(ide)
 	if err != nil {
 		return nil, err
 	}
 
 	// Find the datastore the specified for the ISO
-  isodatastore, err := d.finder.Datastore(d.ctx, isopath)
-  cdrom = devices.InsertIso(cdrom, isodatastore.Path(isofile))
+	isodatastore, err := d.finder.Datastore(d.ctx, isopath)
+	cdrom = devices.InsertIso(cdrom, isodatastore.Path(isofile))
 	devices = append(devices, cdrom)
 
-
-  // Add Hard Disk
+	// Add Hard Disk
 	controllername := devices.Name(scsi)
 
-  controller, err := devices.FindDiskController(controllername)
-  if err != nil {
-	  return nil, err
-  }
+	controller, err := devices.FindDiskController(controllername)
+	if err != nil {
+		return nil, err
+	}
 
 	disk := &types.VirtualDisk{
 		VirtualDevice: types.VirtualDevice{

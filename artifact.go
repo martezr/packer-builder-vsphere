@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/vmware/govmomi/object"
 	"context"
+	"github.com/vmware/govmomi/object"
 )
 
 const BuilderId = "martezr.vsphere-iso"

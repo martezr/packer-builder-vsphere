@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/mitchellh/multistep"
 	"fmt"
+	"github.com/mitchellh/multistep"
 )
 
 type ConnectConfig struct {

@@ -1,32 +1,32 @@
 package main
 
 import (
+	"fmt"
+	"github.com/hashicorp/packer/packer"
 	"github.com/mitchellh/multistep"
 	"github.com/vmware/govmomi/object"
-	"github.com/hashicorp/packer/packer"
-	"fmt"
 )
 
 type CreateConfig struct {
-	VMName         		string `mapstructure:"vm_name"`
-	Folder         		string `mapstructure:"folder"`
-  GuestOS        		string `mapstructure:"guest_os_type"`
-	CPU            		int32  `mapstructure:"cpu"`
-	RAM            		int64  `mapstructure:"ram"`
-	Annotation				string `mapstructure:"annotation"`
-	HardwareVersion		string `mapstructure:"hardware_version"`
+	VMName          string `mapstructure:"vm_name"`
+	Folder          string `mapstructure:"folder"`
+	GuestOS         string `mapstructure:"guest_os_type"`
+	CPU             int32  `mapstructure:"cpu"`
+	RAM             int64  `mapstructure:"ram"`
+	Annotation      string `mapstructure:"annotation"`
+	HardwareVersion string `mapstructure:"hardware_version"`
 
-  Disk           		string `mapstructure:"disk_size"`
-	IsoFile        		string `mapstructure:"iso"`
-	IsoDatastore   		string `mapstructure:"iso_datastore"`
-	Host           		string `mapstructure:"host"`
-	ResourcePool   		string `mapstructure:"resource_pool"`
-  Cluster        		string `mapstructure:"cluster"`
-	Datastore      		string `mapstructure:"datastore"`
+	Disk         string `mapstructure:"disk_size"`
+	IsoFile      string `mapstructure:"iso"`
+	IsoDatastore string `mapstructure:"iso_datastore"`
+	Host         string `mapstructure:"host"`
+	ResourcePool string `mapstructure:"resource_pool"`
+	Cluster      string `mapstructure:"cluster"`
+	Datastore    string `mapstructure:"datastore"`
 
-  Network           string `mapstructure:"network"`
-  NetworkAdapter    string `mapstructure:"network_adapter"`
-  NetworkMacAddress string `mapstructure:"network_mac_address"`
+	Network           string `mapstructure:"network"`
+	NetworkAdapter    string `mapstructure:"network_adapter"`
+	NetworkMacAddress string `mapstructure:"network_mac_address"`
 }
 
 func (c *CreateConfig) Prepare() []error {

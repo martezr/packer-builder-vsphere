@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/mitchellh/multistep"
-	"github.com/hashicorp/packer/packer"
-	"github.com/vmware/govmomi/object"
 	"fmt"
+	"github.com/hashicorp/packer/packer"
+	"github.com/mitchellh/multistep"
+	"github.com/vmware/govmomi/object"
 )
 
 type StepRun struct {

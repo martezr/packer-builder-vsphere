@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/mitchellh/multistep"
-	"github.com/hashicorp/packer/packer"
-	"github.com/vmware/govmomi/object"
 	"fmt"
+	"github.com/hashicorp/packer/packer"
+	"github.com/mitchellh/multistep"
+	"github.com/vmware/govmomi/object"
 	"log"
 	"time"
 )
@@ -23,7 +23,7 @@ func (s *StepShutdown) Run(state multistep.StateBag) multistep.StepAction {
 	if err != nil {
 		state.Put("error", fmt.Errorf("Cannot shut down VM: %v", err))
 		return multistep.ActionHalt
-		}
+	}
 
 	timeoutvalue := time.Second * 300
 	log.Printf("Waiting max %s for shutdown to complete", timeoutvalue)

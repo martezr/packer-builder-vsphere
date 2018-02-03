@@ -1,8 +1,8 @@
 package main
 
 import (
-	"testing"
 	builderT "github.com/hashicorp/packer/helper/builder/testing"
+	"testing"
 )
 
 func TestBuilderAcc_basic(t *testing.T) {
