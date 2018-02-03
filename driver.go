@@ -22,6 +22,7 @@ type Driver struct {
 	client     *govmomi.Client
 	finder     *find.Finder
 	datacenter *object.Datacenter
+	ResourcePool *object.ResourcePool
 }
 
 func NewDriver(config *ConnectConfig) (*Driver, error) {
@@ -77,9 +78,9 @@ func (d *Driver) CreateVM(config *CreateConfig) (*object.VirtualMachine, error) 
 		GuestId:    config.GuestOS,
 		NumCPUs:    int32(config.CPU),
 		MemoryMB:   int64(config.RAM),
-//		Annotation: config.annotation,
+		Annotation: config.Annotation,
+		Version:		config.HardwareVersion,
 	}
-
 
   // Storage configuration
   var bytesRegexp = regexp.MustCompile(`^(?i)(\d+)([BKMGTPE]?)(ib|b)?$`)
@@ -103,7 +104,6 @@ func (d *Driver) CreateVM(config *CreateConfig) (*object.VirtualMachine, error) 
 		return nil, err
 	}
 
-
 	deviceChange, err := devices.ConfigSpec(types.VirtualDeviceConfigSpecOperationAdd)
 	if err != nil {
 		return nil, err
@@ -118,7 +118,7 @@ func (d *Driver) CreateVM(config *CreateConfig) (*object.VirtualMachine, error) 
 
 	var relocateSpec types.VirtualMachineRelocateSpec
 
-	pool, err := d.finder.ResourcePoolOrDefault(d.ctx, fmt.Sprintf("/%v/host/%v/Resources/%v", d.datacenter.Name(), config.Cluster, config.ResourcePool))
+	pool, err := d.finder.ResourcePoolOrDefault(d.ctx, config.ResourcePool)
 	if err != nil {
 		return nil, err
 	}
@@ -162,12 +162,12 @@ func (d *Driver) ConfigureVM(vm *object.VirtualMachine, config *HardwareConfig) 
 	confSpec.MemoryMB = config.RAM
 
 	var cpuSpec types.ResourceAllocationInfo
-	cpuSpec.Reservation = config.CPUReservation
-	cpuSpec.Limit = config.CPULimit
+	cpuSpec.Reservation = &config.CPUReservation
+	cpuSpec.Limit = &config.CPULimit
 	confSpec.CpuAllocation = &cpuSpec
 
 	var ramSpec types.ResourceAllocationInfo
-	ramSpec.Reservation = config.RAMReservation
+	ramSpec.Reservation = &config.RAMReservation
 	confSpec.MemoryAllocation = &ramSpec
 
 	confSpec.MemoryReservationLockedToMax = &config.RAMReserveAll

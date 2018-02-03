@@ -1,5 +1,5 @@
-hash: 709325293541fff31ae48288c6f5873f67f90ae6ab69d9ae4465fcdf0626d843
-updated: 2017-06-27T10:42:45.867528732+03:00
+hash: b5a46bd90b6ae14d60dde2c13a0394ee2b1ae83bcb1bfc9e76323f18633634e1
+updated: 2018-01-25T18:47:10.867803211Z
 imports:
 - name: github.com/Azure/go-ntlmssp
   version: 29affced641074a59483ed003b5ef73a8bd3593c
@@ -18,7 +18,7 @@ imports:
 - name: github.com/hashicorp/go-version
   version: 03c5bf6be031b6dd45afec16b1cf94fc8938bc77
 - name: github.com/hashicorp/packer
-  version: 6a8ae4b258d1bb0beece05c9fc3bbc1c186a0480
+  version: 9698d7283f790aa1d3755ccbd95a1a1cdea9390a
   subpackages:
   - common
   - common/ssh
@@ -26,6 +26,7 @@ imports:
   - communicator/none
   - communicator/ssh
   - communicator/winrm
+  - helper/builder/testing
   - helper/communicator
   - helper/config
   - packer
@@ -80,10 +81,11 @@ imports:
   subpackages:
   - codec
 - name: github.com/vmware/govmomi
-  version: b63044e5f833781eb7b305bc035392480ee06a82
+  version: 7d879bac14d09f2f2a45a0477c1e45fbf52240f5
   subpackages:
   - find
   - list
+  - nfc
   - object
   - property
   - session
@@ -105,4 +107,8 @@ imports:
   - md4
   - ssh
   - ssh/agent
+- name: golang.org/x/net
+  version: 0ed95abb35c445290478a5348a7b38bb154135fd
+  subpackages:
+  - proxy
 testImports: []

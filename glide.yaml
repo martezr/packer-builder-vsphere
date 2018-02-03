@@ -1,8 +1,9 @@
 package: github.com/martezr/packer-builder-vsphere-iso
 import:
 - package: github.com/hashicorp/packer
-  version: v1.0.2
+  version: v1.1.3
 - package: github.com/mitchellh/multistep
 - package: github.com/vmware/govmomi
-  version: v0.15.0
+  version: v0.16.0
 - package: golang.org/x/crypto
+- package: golang.org/x/net/proxy

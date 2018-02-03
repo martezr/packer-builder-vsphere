@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"github.com/hashicorp/packer/common"
+	"github.com/hashicorp/packer/helper/communicator"
 	"github.com/hashicorp/packer/packer"
 	"github.com/mitchellh/multistep"
 	"github.com/vmware/govmomi/object"
@@ -25,10 +26,14 @@ func (b *Builder) Prepare(raws ...interface{}) ([]string, error) {
 
 func (b *Builder) Run(ui packer.Ui, hook packer.Hook, cache packer.Cache) (packer.Artifact, error) {
 	state := new(multistep.BasicStateBag)
+	state.Put("config", b.config)
+	state.Put("comm", &b.config.Comm)
 	state.Put("hook", hook)
 	state.Put("ui", ui)
 
-	steps := []multistep.Step{
+	steps := []multistep.Step{}
+
+	steps = append(steps,
 		&StepConnect{
 			config: &b.config.ConnectConfig,
 		},
@@ -38,16 +43,29 @@ func (b *Builder) Run(ui packer.Ui, hook packer.Hook, cache packer.Cache) (packe
 		&StepConfigureHardware{
 			config: &b.config.HardwareConfig,
 		},
-		&StepRun{},
-		&common.StepProvision{},
-		&StepShutdown{},
+	)
+
+	if b.config.Comm.Type != "none" {
+		steps = append(steps,
+			&StepRun{},
+			&communicator.StepConnect{
+				Config:    &b.config.Comm,
+				Host:      commHost,
+				SSHConfig: sshConfig,
+			},
+			&common.StepProvision{},
+			&StepShutdown{},
+		)
+	}
+
+	steps = append(steps,
 		&StepCreateSnapshot{
 			createSnapshot: b.config.CreateSnapshot,
 		},
 		&StepConvertToTemplate{
 			ConvertToTemplate: b.config.ConvertToTemplate,
 		},
-	}
+	)
 
 	// Run!
 	b.runner = common.NewRunner(steps, b.config.PackerConfig, ui)

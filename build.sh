@@ -9,5 +9,5 @@ mkdir -p bin
 rm -f bin/*
 
 GOOS=darwin  go build -o bin/packer-builder-vsphere-iso.macos
-GOOS=linux   go build -o bin/packer-builder-vsphere-iso.linux
-GOOS=windows go build -o bin/packer-builder-vsphere-iso.exe
+#GOOS=linux   go build -o bin/packer-builder-vsphere-iso.linux
+#GOOS=windows go build -o bin/packer-builder-vsphere-iso.exe

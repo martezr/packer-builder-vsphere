@@ -13,6 +13,8 @@ type CreateConfig struct {
   GuestOS        		string `mapstructure:"guest_os_type"`
 	CPU            		int32  `mapstructure:"cpu"`
 	RAM            		int64  `mapstructure:"ram"`
+	Annotation				string `mapstructure:"annotation"`
+	HardwareVersion		string `mapstructure:"hardware_version"`
 
   Disk           		string `mapstructure:"disk_size"`
 	IsoFile        		string `mapstructure:"iso"`
@@ -32,9 +34,6 @@ func (c *CreateConfig) Prepare() []error {
 
 	if c.VMName == "" {
 		errs = append(errs, fmt.Errorf("Target VM name is required"))
-	}
-	if c.Host == "" {
-		errs = append(errs, fmt.Errorf("vSphere host is required"))
 	}
 
 	return errs

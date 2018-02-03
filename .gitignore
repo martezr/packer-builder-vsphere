@@ -1,8 +1,12 @@
 .idea/
 .glide/
 vendor/
-packer-builder-vsphere
-packer-builder-vsphere.exe
+packer
+packer-builder-vsphere-iso
+packer-builder-vsphere-iso.exe
+packer-builder-vsphere-iso.macos
+packer-builder-vsphere-iso.linux
 bin/
 test*.json
 crash.log
+*.json
