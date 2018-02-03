@@ -1,5 +1,11 @@
 # Packer Builder for VMware vSphere
 
+[![GitHub release](https://img.shields.io/github/release/martezr/packer-builder-vsphere.svg)](https://github.com/martezr/packer-builder-vsphere/releases)
+[![Travis branch](https://img.shields.io/travis/martezr/packer-builder-vsphere/master.svg)](https://travis-ci.org/martezr/packer-builder-vsphere)
+[![Go Report Card](https://goreportcard.com/badge/martezr/packer-builder-vsphere)](http://goreportcard.com/report/martezr/packer-builder-vsphere)
+[![license](https://img.shields.io/github/license/martezr/packer-builder-vsphere.svg)](https://github.com/martezr/packer-builder-vsphere/blob/master/LICENSE.txt)
+
+
 This a plugin for [HashiCorp Packer](https://www.packer.io/). It uses native vSphere API, and creates virtual machines remotely.
 
 - VMware Player is not required
