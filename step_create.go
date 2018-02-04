@@ -7,6 +7,7 @@ import (
 	"github.com/vmware/govmomi/object"
 )
 
+// CreateConfig holds all the details for the VM creation process.
 type CreateConfig struct {
 	VMName          string `mapstructure:"vm_name"`
 	Folder          string `mapstructure:"folder"`
@@ -29,6 +30,7 @@ type CreateConfig struct {
 	NetworkMacAddress string `mapstructure:"network_mac_address"`
 }
 
+// Prepare the VM creation process
 func (c *CreateConfig) Prepare() []error {
 	var errs []error
 
@@ -39,10 +41,12 @@ func (c *CreateConfig) Prepare() []error {
 	return errs
 }
 
+// Define the creation step
 type StepCreateVM struct {
 	config *CreateConfig
 }
 
+// Create the VM
 func (s *StepCreateVM) Run(state multistep.StateBag) multistep.StepAction {
 	ui := state.Get("ui").(packer.Ui)
 	d := state.Get("driver").(*Driver)
@@ -59,6 +63,7 @@ func (s *StepCreateVM) Run(state multistep.StateBag) multistep.StepAction {
 	return multistep.ActionContinue
 }
 
+// Cleanup the VM creation process
 func (s *StepCreateVM) Cleanup(state multistep.StateBag) {
 	_, cancelled := state.GetOk(multistep.StateCancelled)
 	_, halted := state.GetOk(multistep.StateHalted)

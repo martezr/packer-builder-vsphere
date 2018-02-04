@@ -9,9 +9,11 @@ import (
 	"time"
 )
 
+// Shuts down the VM
 type StepShutdown struct {
 }
 
+// Shutdown the VM after provisioning is completed
 func (s *StepShutdown) Run(state multistep.StateBag) multistep.StepAction {
 	ui := state.Get("ui").(packer.Ui)
 	d := state.Get("driver").(*Driver)
@@ -37,4 +39,5 @@ func (s *StepShutdown) Run(state multistep.StateBag) multistep.StepAction {
 	return multistep.ActionContinue
 }
 
+// Cleanup the shutdown process
 func (s *StepShutdown) Cleanup(state multistep.StateBag) {}

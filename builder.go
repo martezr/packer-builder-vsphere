@@ -9,11 +9,13 @@ import (
 	"github.com/vmware/govmomi/object"
 )
 
+// Builder represents the vsphere-iso builder.
 type Builder struct {
 	config *Config
 	runner multistep.Runner
 }
 
+// Prepare implements the packer.Builder interface.
 func (b *Builder) Prepare(raws ...interface{}) ([]string, error) {
 	c, warnings, errs := NewConfig(raws...)
 	if errs != nil {
@@ -24,6 +26,7 @@ func (b *Builder) Prepare(raws ...interface{}) ([]string, error) {
 	return warnings, nil
 }
 
+// Run implements the packer.Builder interface.
 func (b *Builder) Run(ui packer.Ui, hook packer.Hook, cache packer.Cache) (packer.Artifact, error) {
 	state := new(multistep.BasicStateBag)
 	state.Put("config", b.config)
@@ -92,6 +95,7 @@ func (b *Builder) Run(ui packer.Ui, hook packer.Hook, cache packer.Cache) (packe
 	return artifact, nil
 }
 
+// Cancel the step runner.
 func (b *Builder) Cancel() {
 	if b.runner != nil {
 		b.runner.Cancel()

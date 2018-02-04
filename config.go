@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/packer/template/interpolate"
 )
 
+// Config holds all the details needed to configure the builder.
 type Config struct {
 	common.PackerConfig `mapstructure:",squash"`
 	ConnectConfig       `mapstructure:",squash"`
@@ -20,6 +21,7 @@ type Config struct {
 	ctx interpolate.Context
 }
 
+// NewConfig parses and validates the given config.
 func NewConfig(raws ...interface{}) (*Config, []string, error) {
 	c := new(Config)
 	{

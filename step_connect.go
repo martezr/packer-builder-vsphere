@@ -13,6 +13,7 @@ type ConnectConfig struct {
 	Datacenter         string `mapstructure:"datacenter"`
 }
 
+// Prepare the vCenter connection
 func (c *ConnectConfig) Prepare() []error {
 	var errs []error
 
@@ -29,10 +30,12 @@ func (c *ConnectConfig) Prepare() []error {
 	return errs
 }
 
+// Define the connection step
 type StepConnect struct {
 	config *ConnectConfig
 }
 
+// Connect to the vCenter server
 func (s *StepConnect) Run(state multistep.StateBag) multistep.StepAction {
 	driver, err := NewDriver(s.config)
 	if err != nil {
@@ -44,4 +47,5 @@ func (s *StepConnect) Run(state multistep.StateBag) multistep.StepAction {
 	return multistep.ActionContinue
 }
 
+// Cleanup the connection process
 func (s *StepConnect) Cleanup(multistep.StateBag) {}

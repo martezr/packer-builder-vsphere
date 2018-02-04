@@ -7,6 +7,7 @@ import (
 	"github.com/vmware/govmomi/object"
 )
 
+// HardwareConfig holds all the details for post creation hardware configuration.
 type HardwareConfig struct {
 	CPUs           int32 `mapstructure:"CPUs"`
 	CPUReservation int64 `mapstructure:"CPU_reservation"`
@@ -16,6 +17,7 @@ type HardwareConfig struct {
 	RAMReserveAll  bool  `mapstructure:"RAM_reserve_all"`
 }
 
+// Prepare for the hardware configuration process
 func (c *HardwareConfig) Prepare() []error {
 	var errs []error
 
@@ -26,10 +28,12 @@ func (c *HardwareConfig) Prepare() []error {
 	return errs
 }
 
+// Define the hardware configuration step
 type StepConfigureHardware struct {
 	config *HardwareConfig
 }
 
+// Configure the VM hardware
 func (s *StepConfigureHardware) Run(state multistep.StateBag) multistep.StepAction {
 	ui := state.Get("ui").(packer.Ui)
 	d := state.Get("driver").(*Driver)
@@ -48,4 +52,5 @@ func (s *StepConfigureHardware) Run(state multistep.StateBag) multistep.StepActi
 	return multistep.ActionContinue
 }
 
+// Cleanup the hardware configuration process
 func (s *StepConfigureHardware) Cleanup(multistep.StateBag) {}

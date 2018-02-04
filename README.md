@@ -8,9 +8,12 @@
 
 This a plugin for [HashiCorp Packer](https://www.packer.io/). It uses native vSphere API, and creates virtual machines remotely.
 
-- VMware Player is not required
-- Builds are incremental are create from scratch and require an automated method of installing the operating system.
 - Official vCenter API is used, no ESXi host [modification](https://www.packer.io/docs/builders/vmware-iso.html#building-on-a-remote-vsphere-hypervisor) is required
+
+## Requirements
+
+* An automated OS installation method is required such as a custom ISO with either a kickstart file or autounattend.xml file. PXE installation is also
+  another viable option for automated OS installation.
 
 ## Usage
 * Download the plugin from [Releases](https://github.com/martezr/packer-builder-vsphere/releases) page
@@ -89,8 +92,8 @@ This a plugin for [HashiCorp Packer](https://www.packer.io/). It uses native vSp
       "iso": "ISOS/WIN2K12.ISO",
       "iso_datastore": "Local_Storage",
       "communicator": "winrm",
-      "winrm_username": "root",
-      "winrm_password": "secret"
+      "winrm_username": "administrator",
+      "winrm_password": "password"
     }
   ]
 }
@@ -113,7 +116,7 @@ Location:
 * `datastore` - required if target is a cluster, or a host with multiple datastores.
 
 Hardware customization:
-* `hardware_version` -
+* `hardware_version` - Virtual machine hardware version (i.e. - vmx-11)
 * `guest_os_type` - Guest Operating System identifier.
 * `cpu` - number of CPU sockets. Inherited from source VM by default.
 * `CPU_reservation` - Amount of reserved CPU resources in MHz. Inherited from source VM by default.
@@ -128,9 +131,11 @@ Hardware customization:
 * `network_adapter` - The network adapter type for the VM.
 
 Provisioning:
-* `communicator` - [mandatory]
-* `ssh_username` - [mandatory] username in guest OS.
-* `ssh_password or ssh_private_key_file` - [mandatory] password or SSH-key filename to access a guest OS.
+* `communicator` - The connection protocol for connecting to the guest os [ssh|winrm]
+* `ssh_username` - Guest OS username
+* `ssh_password or ssh_private_key_file` - password or SSH-key filename to access a guest OS.
+* `winrm_username` - Guest OS username
+* `winrm_password` - Guest OS password
 
 Post-processing:
 * `create_snapshot` - add a snapshot, so VM can be used as a base for linked clones. `false` by default.

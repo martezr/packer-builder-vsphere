@@ -1,6 +1,6 @@
 # changelog
 
-### 1.6 (2018-02-03)
+### 1.6 (2018-02-05)
 
 * Add support annotation
 
