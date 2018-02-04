@@ -7,9 +7,11 @@ import (
 	"github.com/vmware/govmomi/object"
 )
 
+// StepRun stores the configuration for the run process
 type StepRun struct {
 }
 
+// Run powers on the VM and waits for the IP address
 func (s *StepRun) Run(state multistep.StateBag) multistep.StepAction {
 	ui := state.Get("ui").(packer.Ui)
 	d := state.Get("driver").(*Driver)
@@ -34,6 +36,7 @@ func (s *StepRun) Run(state multistep.StateBag) multistep.StepAction {
 	return multistep.ActionContinue
 }
 
+// Cleanup the run process
 func (s *StepRun) Cleanup(state multistep.StateBag) {
 	_, cancelled := state.GetOk(multistep.StateCancelled)
 	_, halted := state.GetOk(multistep.StateHalted)

@@ -41,12 +41,12 @@ func (c *CreateConfig) Prepare() []error {
 	return errs
 }
 
-// Define the creation step
+// StepCreateVM defines the creation step
 type StepCreateVM struct {
 	config *CreateConfig
 }
 
-// Create the VM
+// Run creates the VM
 func (s *StepCreateVM) Run(state multistep.StateBag) multistep.StepAction {
 	ui := state.Get("ui").(packer.Ui)
 	d := state.Get("driver").(*Driver)

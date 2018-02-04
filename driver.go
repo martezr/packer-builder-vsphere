@@ -17,6 +17,7 @@ import (
 	"time"
 )
 
+// Driver stores all the configuration data
 type Driver struct {
 	ctx          context.Context
 	client       *govmomi.Client
@@ -25,6 +26,7 @@ type Driver struct {
 	ResourcePool *object.ResourcePool
 }
 
+// NewDriver creates a new vSphere connection
 func NewDriver(config *ConnectConfig) (*Driver, error) {
 	ctx := context.TODO()
 
@@ -68,6 +70,7 @@ func NewDriver(config *ConnectConfig) (*Driver, error) {
 	return &d, nil
 }
 
+// CreateVM creates the VM
 func (d *Driver) CreateVM(config *CreateConfig) (*object.VirtualMachine, error) {
 
 	var devices object.VirtualDeviceList
@@ -147,6 +150,7 @@ func (d *Driver) CreateVM(config *CreateConfig) (*object.VirtualMachine, error) 
 	return vm, nil
 }
 
+// DestroyVM destroys the VM
 func (d *Driver) DestroyVM(vm *object.VirtualMachine) error {
 	task, err := vm.Destroy(d.ctx)
 	if err != nil {
@@ -156,6 +160,7 @@ func (d *Driver) DestroyVM(vm *object.VirtualMachine) error {
 	return err
 }
 
+// ConfigureVM configures the VM
 func (d *Driver) ConfigureVM(vm *object.VirtualMachine, config *HardwareConfig) error {
 	var confSpec types.VirtualMachineConfigSpec
 	confSpec.NumCPUs = config.CPUs
@@ -180,6 +185,7 @@ func (d *Driver) ConfigureVM(vm *object.VirtualMachine, config *HardwareConfig) 
 	return err
 }
 
+// PowerOn powers on the VM
 func (d *Driver) PowerOn(vm *object.VirtualMachine) error {
 	task, err := vm.PowerOn(d.ctx)
 	if err != nil {
@@ -189,6 +195,7 @@ func (d *Driver) PowerOn(vm *object.VirtualMachine) error {
 	return err
 }
 
+// WaitForIP waits for the IP address to become available via VMware Tools
 func (d *Driver) WaitForIP(vm *object.VirtualMachine) (string, error) {
 	ip, err := vm.WaitForIP(d.ctx)
 	if err != nil {
@@ -197,6 +204,7 @@ func (d *Driver) WaitForIP(vm *object.VirtualMachine) (string, error) {
 	return ip, nil
 }
 
+// PowerOff powers of the VM
 func (d *Driver) PowerOff(vm *object.VirtualMachine) error {
 	state, err := vm.PowerState(d.ctx)
 	if err != nil {
@@ -215,11 +223,13 @@ func (d *Driver) PowerOff(vm *object.VirtualMachine) error {
 	return err
 }
 
+// StartShutdown starts the guest shutdown process
 func (d *Driver) StartShutdown(vm *object.VirtualMachine) error {
 	err := vm.ShutdownGuest(d.ctx)
 	return err
 }
 
+// WaitForShutdown waits for the VM to shutdown
 func (d *Driver) WaitForShutdown(vm *object.VirtualMachine, timeout time.Duration) error {
 	shutdownTimer := time.After(timeout)
 	for {
@@ -242,6 +252,7 @@ func (d *Driver) WaitForShutdown(vm *object.VirtualMachine, timeout time.Duratio
 	return nil
 }
 
+// CreateSnapshot creates a snapshot of the VM
 func (d *Driver) CreateSnapshot(vm *object.VirtualMachine) error {
 	task, err := vm.CreateSnapshot(d.ctx, "Created by Packer", "", false, false)
 	if err != nil {
@@ -251,11 +262,13 @@ func (d *Driver) CreateSnapshot(vm *object.VirtualMachine) error {
 	return err
 }
 
+// ConvertToTemplate converts the VM to a template
 func (d *Driver) ConvertToTemplate(vm *object.VirtualMachine) error {
 	err := vm.MarkAsTemplate(d.ctx)
 	return err
 }
 
+// Device handles the complex calls to configure the network adapter
 func (d *Driver) Device(networkname string, netadaptertype string) (types.BaseVirtualDevice, error) {
 
 	network, err := d.finder.Network(d.ctx, networkname)
@@ -279,6 +292,7 @@ func (d *Driver) Device(networkname string, netadaptertype string) (types.BaseVi
 	return device, nil
 }
 
+// addNetwork adds the network adapter to the VM
 func (d *Driver) addNetwork(devices object.VirtualDeviceList, networkname string, netadaptertype string) (object.VirtualDeviceList, error) {
 	netdev, err := d.Device(networkname, netadaptertype)
 	if err != nil {
@@ -289,6 +303,7 @@ func (d *Driver) addNetwork(devices object.VirtualDeviceList, networkname string
 	return devices, nil
 }
 
+// addStorage adds the CD-ROM and Hard Disk to the VM
 func (d *Driver) addStorage(devices object.VirtualDeviceList, isopath string, isofile string, diskbytesize int64) (object.VirtualDeviceList, error) {
 
 	// Create SCSI Controller for Hard Disk

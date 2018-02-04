@@ -6,12 +6,12 @@ import (
 	"github.com/vmware/govmomi/object"
 )
 
-// stores the boolean for whether a snapshot is taken of the VM
+// StepCreateSnapshot stores the boolean for whether a snapshot is taken of the VM
 type StepCreateSnapshot struct {
 	createSnapshot bool
 }
 
-// Create a snapshot of the VM
+// Run the snapshot creation process
 func (s *StepCreateSnapshot) Run(state multistep.StateBag) multistep.StepAction {
 	ui := state.Get("ui").(packer.Ui)
 	d := state.Get("driver").(*Driver)

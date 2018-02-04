@@ -5,6 +5,7 @@ import (
 	"github.com/mitchellh/multistep"
 )
 
+// ConnectConfig holds all the details for the vSphere connection process.
 type ConnectConfig struct {
 	VCenterServer      string `mapstructure:"vcenter_server"`
 	Username           string `mapstructure:"username"`
@@ -30,12 +31,12 @@ func (c *ConnectConfig) Prepare() []error {
 	return errs
 }
 
-// Define the connection step
+// StepConnect defines the connection step
 type StepConnect struct {
 	config *ConnectConfig
 }
 
-// Connect to the vCenter server
+// Run connects to the vCenter server
 func (s *StepConnect) Run(state multistep.StateBag) multistep.StepAction {
 	driver, err := NewDriver(s.config)
 	if err != nil {

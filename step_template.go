@@ -6,12 +6,12 @@ import (
 	"github.com/vmware/govmomi/object"
 )
 
-// stores the boolean for whether the VM is converted to a template
+// StepConvertToTemplate stores the boolean for whether the VM is converted to a template
 type StepConvertToTemplate struct {
 	ConvertToTemplate bool
 }
 
-// Convert the VM to a template
+// Run the template creation process
 func (s *StepConvertToTemplate) Run(state multistep.StateBag) multistep.StepAction {
 	ui := state.Get("ui").(packer.Ui)
 	d := state.Get("driver").(*Driver)
