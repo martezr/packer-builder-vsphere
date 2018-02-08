@@ -3,9 +3,9 @@
 vendor/
 packer
 packer-builder-vsphere-iso
-packer-builder-vsphere-iso.exe
-packer-builder-vsphere-iso.macos
-packer-builder-vsphere-iso.linux
+*.exe
+*.macos
+*.linux
 bin/
 test*.json
 crash.log

@@ -8,6 +8,8 @@
 
 * Add support for provisioners
 
+* Add support for non-clustered vSphere environment
+
 * Upgrade supported packer version from v1.0.2 to v1.1.3
 
 * Upgrade supported govmomi version from v0.15.0 to v0.16.0
