@@ -21,6 +21,7 @@ type Config struct {
 	common.RunConfig      `mapstructure:",squash"`
 	Comm                  communicator.Config `mapstructure:",squash"`
 	common.ShutdownConfig `mapstructure:",squash"`
+	common.BootConfig     `mapstructure:",squash"`
 
 	CreateSnapshot    bool `mapstructure:"create_snapshot"`
 	ConvertToTemplate bool `mapstructure:"convert_to_template"`
@@ -43,6 +44,7 @@ func NewConfig(raws ...interface{}) (*Config, []string, error) {
 	errs = packer.MultiErrorAppend(errs, c.CloneConfig.Prepare()...)
 	errs = packer.MultiErrorAppend(errs, c.LocationConfig.Prepare()...)
 	errs = packer.MultiErrorAppend(errs, c.HardwareConfig.Prepare()...)
+	errs = packer.MultiErrorAppend(errs, c.BootConfig.Prepare()...)
 
 	errs = packer.MultiErrorAppend(errs, c.Comm.Prepare(&c.ctx)...)
 	errs = packer.MultiErrorAppend(errs, c.ShutdownConfig.Prepare()...)

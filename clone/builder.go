@@ -55,6 +55,9 @@ func (b *Builder) Run(ui packer.Ui, hook packer.Hook, cache packer.Cache) (packe
 				Config:   &b.config.RunConfig,
 				SetOrder: false,
 			},
+			&common.StepBootCommand{
+				Config: &b.config.BootConfig,
+			},
 			&common.StepWaitForIp{},
 			&communicator.StepConnect{
 				Config:    &b.config.Comm,
